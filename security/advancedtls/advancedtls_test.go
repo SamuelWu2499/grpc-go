@@ -140,7 +140,7 @@ func (s) TestClientOptionsConfigErrorCases(t *testing.T) {
 				MinVersion:      test.MinVersion,
 				MaxVersion:      test.MaxVersion,
 			}
-			_, err := clientOptions.config()
+			_, err := clientOptions.config(nil)
 			if err == nil {
 				t.Fatalf("ClientOptions{%v}.config() returns no err, wantErr != nil", clientOptions)
 			}
@@ -184,7 +184,7 @@ func (s) TestClientOptionsConfigSuccessCases(t *testing.T) {
 				MinVersion:      test.MinVersion,
 				MaxVersion:      test.MaxVersion,
 			}
-			clientConfig, err := clientOptions.config()
+			clientConfig, err := clientOptions.config(nil)
 			if err != nil {
 				t.Fatalf("ClientOptions{%v}.config() = %v, wantErr == nil", clientOptions, err)
 			}
@@ -772,7 +772,7 @@ func (s) TestClientServerHandshake(t *testing.T) {
 				VType:            test.clientVType,
 				RevocationConfig: test.clientRevocationConfig,
 			}
-			clientTLS, err := NewClientCreds(clientOptions)
+			clientTLS, err := NewClientCreds(clientOptions, nil)
 			if err != nil {
 				t.Fatalf("NewClientCreds failed: %v", err)
 			}
@@ -834,7 +834,7 @@ func (s) TestAdvancedTLSOverrideServerName(t *testing.T) {
 		},
 		ServerNameOverride: expectedServerName,
 	}
-	c, err := NewClientCreds(clientOptions)
+	c, err := NewClientCreds(clientOptions, nil)
 	if err != nil {
 		t.Fatalf("Client is unable to create credentials. Error: %v", err)
 	}

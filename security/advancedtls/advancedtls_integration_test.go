@@ -375,7 +375,7 @@ func (s) TestEnd2End(t *testing.T) {
 				},
 				VType: test.clientVType,
 			}
-			clientTLSCreds, err := NewClientCreds(clientOptions)
+			clientTLSCreds, err := NewClientCreds(clientOptions, nil)
 			if err != nil {
 				t.Fatalf("clientTLSCreds failed to create: %v", err)
 			}
@@ -666,7 +666,7 @@ func (s) TestPEMFileProviderEnd2End(t *testing.T) {
 				},
 				VType: CertVerification,
 			}
-			clientTLSCreds, err := NewClientCreds(clientOptions)
+			clientTLSCreds, err := NewClientCreds(clientOptions, nil)
 			if err != nil {
 				t.Fatalf("clientTLSCreds failed to create, error: %v", err)
 			}
@@ -791,7 +791,7 @@ func (s) TestDefaultHostNameCheck(t *testing.T) {
 				},
 				VType: test.clientVType,
 			}
-			clientTLSCreds, err := NewClientCreds(clientOptions)
+			clientTLSCreds, err := NewClientCreds(clientOptions, nil)
 			if err != nil {
 				t.Fatalf("clientTLSCreds failed to create: %v", err)
 			}
@@ -933,7 +933,7 @@ func (s) TestTLSVersions(t *testing.T) {
 				MinVersion: test.clientMinVersion,
 				MaxVersion: test.clientMaxVersion,
 			}
-			clientTLSCreds, err := NewClientCreds(clientOptions)
+			clientTLSCreds, err := NewClientCreds(clientOptions, nil)
 			if err != nil {
 				t.Fatalf("clientTLSCreds failed to create: %v", err)
 			}
