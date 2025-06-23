@@ -225,7 +225,14 @@ type ServerOptions struct {
 	MaxVersion uint16
 }
 
-func (o *ClientOptions) config() (*tls.Config, error) {
+func (o *ClientOptions) config(config *tls.Config) (*tls.Config, error) {
+	if config == nil {
+		config = &tls.Config{
+			ServerName: o.ServerNameOverride,
+			MinVersion: o.MinVersion,
+			MaxVersion: o.MaxVersion,
+		}
+	}
 	if o.VType == SkipVerification && o.VerifyPeer == nil {
 		return nil, fmt.Errorf("client needs to provide custom verification mechanism if choose to skip default verification")
 	}
@@ -243,14 +250,9 @@ func (o *ClientOptions) config() (*tls.Config, error) {
 	if o.MinVersion > o.MaxVersion {
 		return nil, fmt.Errorf("the minimum TLS version is larger than the maximum TLS version")
 	}
-	config := &tls.Config{
-		ServerName: o.ServerNameOverride,
-		// We have to set InsecureSkipVerify to true to skip the default checks and
-		// use the verification function we built from buildVerifyFunc.
-		InsecureSkipVerify: true,
-		MinVersion:         o.MinVersion,
-		MaxVersion:         o.MaxVersion,
-	}
+	// We have to set InsecureSkipVerify to true to skip the default checks and
+	// use the verification function we built from buildVerifyFunc.
+	config.InsecureSkipVerify = true
 	// Propagate root-certificate-related fields in tls.Config.
 	switch {
 	case o.RootOptions.RootCACerts != nil:
@@ -575,8 +577,8 @@ func buildVerifyFunc(c *advancedTLSCreds,
 
 // NewClientCreds uses ClientOptions to construct a TransportCredentials based
 // on TLS.
-func NewClientCreds(o *ClientOptions) (credentials.TransportCredentials, error) {
-	conf, err := o.config()
+func NewClientCreds(o *ClientOptions, config *tls.Config) (credentials.TransportCredentials, error) {
+	conf, err := o.config(config)
 	if err != nil {
 		return nil, err
 	}
